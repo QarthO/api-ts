@@ -5,6 +5,7 @@ import { NODE_ENV, PORT, LOG_FORMAT} from '@config';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
+import ip from 'ip'
 
 class App {
   public app: express.Application;
@@ -14,7 +15,7 @@ class App {
   constructor(routes: Routes[]) {
     this.app = express();
     this.env = NODE_ENV || 'development';
-    this.port = PORT || 3000;
+    this.port = PORT || 50000;
 
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
@@ -22,11 +23,11 @@ class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
-      logger.info(`=================================`);
-      logger.info(`======= ENV: ${this.env} =======`);
-      logger.info(`🚀 App listening on the port ${this.port}`);
-      logger.info(`=================================`);
+    this.app.listen((this.port) as number, ip.address(), () => {
+      logger.info(`=======================================`);
+      logger.info(`========== ENV: ${this.env} ==========`);
+      logger.info(`API Listening on http://${ip.address()}:${this.port}`);
+      logger.info(`=======================================`);
     });
   }
 

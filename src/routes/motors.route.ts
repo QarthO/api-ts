@@ -14,7 +14,7 @@ class MotorsRoute implements Routes {
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.motorsController.getMotors);
     this.router.get(`${this.path}/:id(\\d+)`, this.motorsController.getMotorById);
-    this.router.get(`${this.path}/:id(\\d+)/:position`, this.motorsController.getMotorById);
+    this.router.get(`${this.path}/:id(\\d+)/:position(\\d+)`, this.motorsController.setMotorPosition);
   }
 }
 
