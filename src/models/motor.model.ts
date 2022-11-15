@@ -3,7 +3,7 @@ import { Motor } from '@/interfaces/motor.interface';
 // password: password
 const motorModel: Motor[] = [
   // FEET
-  { id: 0, name: 'left-foot', position: 0, min: 0, max: 255 },
+  { id: 0, name: 'left-foot', position: 0, min: 1, max: 254 },
   { id: 1, name: 'right-foot', position: 0, min: 0, max: 255 },
   { id: 2, name: 'left-heel', position: 0, min: 0, max: 255 },
   { id: 3, name: 'right-heel', position: 0, min: 0, max: 255 },
