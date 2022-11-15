@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Motor } from '@/interfaces/motor.interface';
 import MotorService from '@/services/motors.service';
-import rclnodejs, { Publisher } from 'rclnodejs'
+import rclnodejs, { Publisher, MessageType } from 'rclnodejs'
 
 const nodeName = 'api_node'
 var node: rclnodejs.Node
@@ -17,9 +17,9 @@ rclnodejs.init()
   node = new rclnodejs.Node(nodeName) 
 
   // creates a publisher
-  const msgType = 'uxa_sam_msgs/msg/PositionMove'
+  const msgType: MessageType<any> = 'uxa_sam_msgs/msg/PositionMove'
   const topic = 'sam_driver_position_move'
-  // motorPub = node.createPublisher(msgType, topic)
+  motorPub = node.createPublisher(msgType, topic)
   
   
   // runs the node
@@ -61,6 +61,14 @@ class MotorsController {
       const motorId = Number(req.params.id)
       const newMotorPos = Number(req.params.position)
       const findOneMotorData: Motor = await this.motorService.findMotorById(motorId)
+      
+      let motorMsg = {
+        id: motorId,
+        pos: newMotorPos,
+        torqlevel: 1
+      }
+
+      motorPub.publish(motorMsg)
 
       res.status(200).json({ data: findOneMotorData, message: 'findOne' , new_position: newMotorPos})
 

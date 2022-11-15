@@ -6,6 +6,7 @@ import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import ip from 'ip'
+import qrcode from 'qrcode'
 
 class App {
   public app: express.Application;
@@ -13,22 +14,31 @@ class App {
   public port: string | number;
 
   constructor(routes: Routes[]) {
-    this.app = express();
-    this.env = NODE_ENV || 'development';
-    this.port = PORT || 50000;
+    this.app = express()
+    this.env = NODE_ENV || 'development'
+    this.port = PORT || 50000
 
-    this.initializeMiddlewares();
-    this.initializeRoutes(routes);
-    this.initializeErrorHandling();
+    this.initializeMiddlewares()
+    this.initializeRoutes(routes)
+    this.initializeErrorHandling()
+    this.initializeViewEngine()
   }
 
   public listen() {
     this.app.listen((this.port) as number, ip.address(), () => {
-      logger.info(`=======================================`);
-      logger.info(`========== ENV: ${this.env} ==========`);
-      logger.info(`API Listening on http://${ip.address()}:${this.port}`);
-      logger.info(`=======================================`);
+      logger.info(`=======================================`)
+      logger.info(`========== ENV: ${this.env} ==========`)
+      logger.info(`API Listening on http://${ip.address()}:${this.port}`)
+      logger.info(`=======================================`)
     });
+
+    let apiURL = `http://${ip.address()}:${this.port}/demo`
+  
+    qrcode.toDataURL(apiURL, function (err, url) {
+      console.log(url)
+    })
+
+
   }
 
   public getServer() {
@@ -50,6 +60,10 @@ class App {
 
   private initializeErrorHandling() {
     this.app.use(errorMiddleware);
+  }
+
+  private initializeViewEngine() {
+    this.app.set('view engine', 'pug')
   }
 }
 
