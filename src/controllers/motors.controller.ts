@@ -18,7 +18,7 @@ rclnodejs.init()
 
   // creates a publisher
   const msgType: MessageType<any> = 'uxa_sam_msgs/msg/PositionMove'
-  const topic = 'sam_driver_position_move'
+  const topic = 'uxa_sam_driver/position_move'
   motorPub = node.createPublisher(msgType, topic)
   
   
@@ -67,10 +67,13 @@ class MotorsController {
         pos: newMotorPos,
         torqlevel: 1
       }
+      console.log(motorMsg)
 
       motorPub.publish(motorMsg)
 
-      res.status(200).json({ data: findOneMotorData, message: 'findOne' , new_position: newMotorPos})
+      node.spinOnce()
+
+      res.status(200).json({ data: findOneMotorData, message: 'findOne' , smile: newMotorPos})
 
     } catch (error) {
       next(error)
